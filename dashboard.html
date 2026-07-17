@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+      </head>
+      <style>
+        body {
+          margin: 0;
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: black;
+          font-family: Arial, sans-serif;
+          color: white;
+        }
+
+        .container {
+          width: 360px;
+          background: #1f242d;
+          border-radius: 24px;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+          padding: 22px;
+        }
+
+        .hero {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+
+        .title {
+          text-align: center;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #fff;
+        }
+
+        .joke-line,
+        .punch-line {
+          width: 100%;
+          height: 100px;
+          border: none;
+          border-radius: 12px;
+          background: #0d0f12;
+          color: #fff;
+          padding: 0 14px;
+          box-sizing: border-box;
+          font-size: 1rem;
+          overflow-y: auto;
+        }
+
+        .actions {
+          display: flex;
+          gap: 12px;
+        }
+
+        button {
+          flex: 1;
+          height: 52px;
+          border: none;
+          border-radius: 12px;
+          background: #28a745;
+          color: #fff;
+          font-size: 1rem;
+          cursor: pointer;
+          transition:
+            transform 0.08s ease,
+            background 0.15s ease;
+        }
+
+        button.secondary {
+          background: #2f3644;
+        }
+
+        button:active {
+          transform: scale(0.99);
+        }
+      </style>
+      <body>
+        <div class="container">
+          <div class="hero">
+            <div class="title">Admin Panel & Dad's Jokes</div>
+            <div class="joke-line"><p id="setUp">Set Up Jokes</p></div>
+            <div class="punch-line"><p id="punchLine">Punch Line...</p></div>
+            <div class="actions">
+              <button onclick="punchLineBtn()">Punch Line</button>
+              <button onclick="refresh()">Refresh</button>
+              <button class="secondary" onclick="logOut()">Log Out</button>
+            </div>
+          </div>
+        </div>
+        <script>
+          let username = sessionStorage.getItem("sUser");
+          let password = sessionStorage.getItem("sPass");
+
+          if (username !== null && password !== null) {
+            let setUp = document.getElementById("setUp");
+            let punchLine = document.getElementById("punchLine");
+
+            fetch("https://official-joke-api.appspot.com/random_joke")
+              .then((Response) => Response.json())
+              .then((get) => {
+                setUp.innerHTML = get.setup;
+                punchLineMsg = get.punchline;
+              })
+              .catch((error) => alert(error));
+
+            function punchLineBtn() {
+              punchLine.innerHTML = punchLineMsg;
+            }
+
+            function refresh() {
+              window.location.href = "";
+            }
+
+            function logOut() {
+              sessionStorage.clear();
+              window.location.href = "login.html";
+            }
+          } else {
+            window.location.href = "login.html";
+          }
+        </script>
+      </body>
+    </html>
+  </body>
+</html>
