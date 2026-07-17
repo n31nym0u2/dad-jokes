@@ -1,164 +1,178 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<style>
-  body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: black;
-    font-family: Arial, sans-serif;
-    color: white;
-  }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="icon.png">
+    <title>Login</title>
+  </head>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: black;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
 
-  .container {
-    width: 360px;
-    background: #1f242d;
-    border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
-    padding: 22px;
-  }
+    .container {
+      width: 360px;
+      background: #1f242d;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+      padding: 22px;
+    }
 
-  .hero {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
+    .hero {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
 
-  .title {
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #fff;
-  }
+    .title {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+    }
 
-  input[type="password"], input[type="text"] {
-    width: 100%;
-    height: 52px;
-    border: none;
-    border-radius: 12px;
-    background: #0d0f12;
-    color: #fff;
-    padding: 0 14px;
-    box-sizing: border-box;
-    font-size: 1rem;
-  }
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      height: 52px;
+      border: none;
+      border-radius: 12px;
+      background: #0d0f12;
+      color: #fff;
+      padding: 0 14px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
 
-  .actions {
-    display: flex;
-    gap: 12px;
-  }
+    .actions {
+      display: flex;
+      gap: 12px;
+    }
 
-  button {
-    flex: 1;
-    height: 52px;
-    border: none;
-    border-radius: 12px;
-    background: #28a745;
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: transform 0.08s ease, background 0.15s ease;
-  }
+    button {
+      flex: 1;
+      height: 52px;
+      border: none;
+      border-radius: 12px;
+      background: #28a745;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition:
+        transform 0.08s ease,
+        background 0.15s ease;
+    }
 
-  button.secondary {
-    background: #2f3644;
-  }
+    button.secondary {
+      background: #2f3644;
+    }
 
-  button:active { transform: scale(0.99); }
-</style>
-<body>
-  <div class="container">
-    <div class="hero">
-      <div class="title">Login Credentials</div>
-      <input type="text" id="userValue" placeholder="Username">
-      <input type="password" id="passValue" placeholder="Password">
-      <div class="actions">
-        <button onclick="login()">Login</button>
-        <button class="secondary" onclick="changePass()">Change Password</button>
+    button:active {
+      transform: scale(0.99);
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="hero">
+        <div class="title">Login Credentials</div>
+        <input type="text" id="userValue" placeholder="Username" />
+        <input type="password" id="passValue" placeholder="Password" />
+        <div class="actions">
+          <button onclick="login()">Login</button>
+          <button class="secondary" onclick="changePass()">
+            Change Password
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-  <script>
-    async function sha256(message) {
-            const msgUint8 = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            return hashHex;
+    <script>
+      async function sha256(message) {
+        const msgUint8 = new TextEncoder().encode(message);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("");
+        return hashHex;
+      }
+
+      let username = localStorage.getItem("username");
+      let password = localStorage.getItem("password");
+      let sUser = sessionStorage.getItem("sUser");
+      let sPass = sessionStorage.getItem("sPass");
+
+      if (sUser !== null && sPass !== null) {
+        window.location.href = "dashboard.html";
+      }
+
+      if (username === null || password === null) {
+        window.location.href = "setup.html";
+      }
+
+      async function login() {
+        const usernameInput = document.getElementById("userValue").value;
+        const passwordInput = document.getElementById("passValue").value;
+        const storedUserHash = localStorage.getItem("username");
+        const storedPassHash = localStorage.getItem("password");
+
+        if (usernameInput === "" && passwordInput === "") {
+          alert("Both fields are required. Please provide your username and password.");
+          return;
+        }
+        if (usernameInput === "") {
+          alert("Oops! You forgot to enter your username.");
+          return;
+        }
+        if (passwordInput === "") {
+          alert("Oops! You forgot to enter your password.");
+          return;
         }
 
+        const userHashed = await sha256(usernameInput);
+        const passHashed = await sha256(passwordInput);
 
-    let username = localStorage.getItem('username');
-    let password = localStorage.getItem('password');
-    let sUser = sessionStorage.getItem('sUser');
-    let sPass = sessionStorage.getItem('sPass');
-
-    if (sUser !== null && sPass !== null) {
-      window.location.href = 'dashboard.html';
-    }
-
-    if (username === null || password === null) {
-      window.location.href = 'setup.html';
-    }
-
-    async function login() {
-      const usernameInput = document.getElementById('userValue').value;
-      const passwordInput = document.getElementById('passValue').value;
-      const storedUserHash = localStorage.getItem('username');
-      const storedPassHash = localStorage.getItem('password');
-
-      if (usernameInput === '' && passwordInput === '') {
-        alert('Both Username and Password are empty please fill them up');
-        return;
-      }
-      if (usernameInput === '') {
-        alert('The Username is empty please fill it up');
-        return;
-      }
-      if (passwordInput === '') {
-        alert('The Password is empty please fill it up');
-        return;
+        if (userHashed === storedUserHash && passHashed === storedPassHash) {
+          sessionStorage.setItem("sUser", userHashed);
+          sessionStorage.setItem("sPass", passHashed);
+          window.location.href = "";
+        } else if (
+          userHashed !== storedUserHash &&
+          passHashed !== storedPassHash
+        ) {
+          alert("Invalid username or password. Please try again.");
+        } else if (userHashed !== storedUserHash) {
+          alert("Incorrect username. Please try again.");
+        } else {
+          alert("Incorrect password. Please try again.");
+        }
       }
 
-      const userHashed = await sha256(usernameInput);
-      const passHashed = await sha256(passwordInput);
+      async function changePass() {
+        const usernameInput = document.getElementById("userValue").value;
+        const passwordInput = document.getElementById("passValue").value;
+        const storedUserHash = localStorage.getItem("username");
+        const storedPassHash = localStorage.getItem("password");
+        const userHashed = await sha256(usernameInput);
+        const passHashed = await sha256(passwordInput);
 
-      if (userHashed === storedUserHash && passHashed === storedPassHash) {
-        sessionStorage.setItem('sUser', userHashed);
-        sessionStorage.setItem('sPass', passHashed);
-        window.location.href = 'dashboard.html';
-      } else if (userHashed !== storedUserHash && passHashed !== storedPassHash) {
-        alert('Invalid both Username and Password');
-      } else if (userHashed !== storedUserHash) {
-        alert('Invalid Username, please try again');
-      } else {
-        alert('Invalid Password, please try again');
+        if (userHashed === storedUserHash && passHashed === storedPassHash) {
+          localStorage.clear();
+          sessionStorage.clear();
+          window.location.href = "setup.html";
+        } else {
+          alert(
+            "Please enter a valid username and password to Change the Password.",
+          );
+        }
       }
-    }
-
-    async function changePass() {
-      const usernameInput = document.getElementById('userValue').value;
-      const passwordInput = document.getElementById('passValue').value;
-      const storedUserHash = localStorage.getItem('username');
-      const storedPassHash = localStorage.getItem('password');
-      const userHashed = await sha256(usernameInput);
-      const passHashed = await sha256(passwordInput);
-
-      if (userHashed === storedUserHash && passHashed === storedPassHash) {
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.href = 'setup.html';
-      } else {
-        alert('Please input first the Correct Combination of Username and Password');
-      }
-    }
-  </script>
-</body>
+    </script>
+  </body>
 </html>

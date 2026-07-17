@@ -1,133 +1,144 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<style>
-  body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: black;
-    font-family: Arial, sans-serif;
-    color: white;
-  }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="icon.png">
+    <title>Set Up</title>
+  </head>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: black;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
 
-  .container {
-    width: 360px;
-    background: #1f242d;
-    border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
-    padding: 22px;
-  }
+    .container {
+      width: 360px;
+      background: #1f242d;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+      padding: 22px;
+    }
 
-  .hero {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
+    .hero {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
 
-  .title {
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #fff;
-  }
+    .title {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+    }
 
-  input[type="password"], input[type="text"] {
-    width: 100%;
-    height: 52px;
-    border: none;
-    border-radius: 12px;
-    background: #0d0f12;
-    color: #fff;
-    padding: 0 14px;
-    box-sizing: border-box;
-    font-size: 1rem;
-  }
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      height: 52px;
+      border: none;
+      border-radius: 12px;
+      background: #0d0f12;
+      color: #fff;
+      padding: 0 14px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
 
-  .actions {
-    display: flex;
-    gap: 12px;
-  }
+    .actions {
+      display: flex;
+      gap: 12px;
+    }
 
-  button {
-    flex: 1;
-    height: 52px;
-    border: none;
-    border-radius: 12px;
-    background: #28a745;
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: transform 0.08s ease, background 0.15s ease;
-  }
+    button {
+      flex: 1;
+      height: 52px;
+      border: none;
+      border-radius: 12px;
+      background: #28a745;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition:
+        transform 0.08s ease,
+        background 0.15s ease;
+    }
 
-  button.secondary {
-    background: #2f3644;
-  }
+    button.secondary {
+      background: #2f3644;
+    }
 
-  button:active { transform: scale(0.99); }
-</style>
-<body>
-  <div class="container">
-    <div class="hero">
-      <div class="title">Setup credentials</div>
-      <input type="text" id="userValue" placeholder="Username">
-      <input type="password" id="passValue" placeholder="Password">
-      <input type="password" id="conPassValue" placeholder=" Confirm Password">
-      <div class="actions">
-        <button onclick="setup()">Done</button>
-        <button class="secondary" onclick="clearInputs()">Clear</button>
+    button:active {
+      transform: scale(0.99);
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="hero">
+        <div class="title">Setup credentials</div>
+        <input type="text" id="userValue" placeholder="Username" />
+        <input type="password" id="passValue" placeholder="Password" />
+        <input
+          type="password"
+          id="conPassValue"
+          placeholder=" Confirm Password"
+        />
+        <div class="actions">
+          <button onclick="setup()">Done</button>
+          <button class="secondary" onclick="clearInputs()">Clear</button>
+        </div>
       </div>
     </div>
-  </div>
-  <script>
-    async function sha256(message) {
-            const msgUint8 = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            return hashHex;
-        }
-
-    let username = localStorage.getItem('username');
-    let password = localStorage.getItem('password');
-
-    if (username !== null && password !== null) {
-      window.location.href = 'login.html';
-    }
-
-    async function setup() {
-      let username = document.getElementById('userValue').value;
-      let password = document.getElementById('passValue').value;
-      let confirmPassword = document.getElementById('conPassValue').value;
-
-      if (username !== '' && password !== '') {
-        if (password === confirmPassword) {
-          const userHashed = await sha256(username);
-          const passHashed = await sha256(password);
-          localStorage.setItem('username', userHashed);
-          localStorage.setItem('password', passHashed);
-          window.location.href = 'login.html';
-        } else {
-          alert('The Combination of Password is not Match, please try again');
-        }
-      } else {
-        alert('Username and Password are empty please fill them up');
+    <script>
+      async function sha256(message) {
+        const msgUint8 = new TextEncoder().encode(message);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("");
+        return hashHex;
       }
-    }
 
-    function clearInputs() {
-      document.getElementById('userValue').value = "";
-      document.getElementById('passValue').value = "";
-      document.getElementById('conPassValue').value = "";
-    }
-  </script>
-</body>
+      let username = localStorage.getItem("username");
+      let password = localStorage.getItem("password");
+
+      if (username !== null && password !== null) {
+        window.location.href = "login.html";
+      }
+
+      async function setup() {
+        let username = document.getElementById("userValue").value;
+        let password = document.getElementById("passValue").value;
+        let confirmPassword = document.getElementById("conPassValue").value;
+
+        if (username !== "" && password !== "") {
+          if (password === confirmPassword) {
+            const userHashed = await sha256(username);
+            const passHashed = await sha256(password);
+            localStorage.setItem("username", userHashed);
+            localStorage.setItem("password", passHashed);
+            window.location.href = "";
+          } else {
+            alert("Passwords do not match. Please try again.");
+          }
+        } else {
+          alert("Please enter your username and password.");
+        }
+      }
+
+      function clearInputs() {
+        document.getElementById("userValue").value = "";
+        document.getElementById("passValue").value = "";
+        document.getElementById("conPassValue").value = "";
+      }
+    </script>
+  </body>
 </html>
-
